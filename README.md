@@ -25,11 +25,15 @@
 - 明确首批场景（如内部文档问答、客服知识助手）。
 - 准备 50-100 条真实问题集与标准答案。
 - 定义上线 KPI：回答正确率、引用命中率、P95 延迟、单问成本。
+- 已落地文档：`docs/week0/README.md`、`docs/week0/scope.md`、`docs/week0/kpi.md`
+- 已落地评测：`eval/week0/qa_goldens_seed.csv`、`eval/week0/rubric.md`
 
 ### 第 1 周：初始化工程骨架
 - 后端：`FastAPI`、`pytest`、`ruff`、依赖管理（`uv` 或 `poetry`）。
 - 前端：`Next.js App Router + TypeScript`。
 - 基础设施：`docker-compose` 启动 `postgres+pgvector`、`redis`。
+- 已落地目录：`backend/`、`frontend/`、`infra/docker-compose.yml`
+- 已落地文档：`docs/week1/README.md`
 
 ### 第 2 周：先完成非 Agent RAG 基线（必须）
 - 文档解析与清洗（PDF/网页/知识库）。
@@ -72,3 +76,9 @@
 
 - OpenRAG: https://github.com/langflow-ai/openrag
 - FastGPT: https://github.com/labring/FastGPT
+
+## 本地开发（当前可用）
+
+1. 启动基础设施：`docker compose -f infra/docker-compose.yml up -d`
+2. 启动后端：`cd backend && uv sync --extra dev && uv run uvicorn app.main:app --reload`
+3. 启动前端：`cd frontend && npm install && npm run dev`
