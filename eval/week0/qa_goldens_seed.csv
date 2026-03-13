@@ -1,0 +1,51 @@
+id,question,gold_answer,source_reference,intent,difficulty,must_cite
+Q001,推荐路线A的完整方案是什么,FastAPI + LangGraph + PostgreSQL/pgvector起步 + Next.js App Router,README.md#路线-a推荐,factoid,easy,true
+Q002,路线A的核心优势是什么,流程可控可测试可解释并且适合先做稳定基线再逐步Agent化,README.md#路线-a推荐,factoid,easy,true
+Q003,路线A适合什么团队阶段,适合从零开始并希望兼顾上线速度和长期可维护性的团队,README.md#路线-a推荐,factoid,easy,true
+Q004,路线B采用了什么技术组合,FastAPI + LangChain高层Agent + Qdrant + Next.js,README.md#路线-b,factoid,easy,true
+Q005,路线B的优点是什么,上线更快且集成成本低,README.md#路线-b,factoid,easy,true
+Q006,路线B的主要风险是什么,流程可解释性与精细控制弱于LangGraph方案,README.md#路线-b,factoid,easy,true
+Q007,路线C采用了什么技术组合,LlamaIndex Workflow + FastAPI + Next.js,README.md#路线-c,factoid,easy,true
+Q008,路线C的优点是什么,文档连接器和检索生态更强,README.md#路线-c,factoid,easy,true
+Q009,路线C的风险是什么,复杂Agent编排的灵活性通常不如LangGraph,README.md#路线-c,factoid,easy,true
+Q010,文档中推荐的是哪条路线,推荐路线A,README.md#技术路线3-选-1,factoid,easy,true
+Q011,第0周第一项目标是什么,明确首批场景例如内部文档问答或客服知识助手,README.md#第-0-周定义边界与验收标准,process,easy,true
+Q012,第0周第二项目标是什么,准备50到100条真实问题集与标准答案,README.md#第-0-周定义边界与验收标准,process,easy,true
+Q013,第0周第三项目标是什么,定义上线KPI包括正确率引用命中率P95延迟与单问成本,README.md#第-0-周定义边界与验收标准,process,easy,true
+Q014,第1周后端推荐哪些基础工具,FastAPI pytest ruff 以及uv或poetry依赖管理,README.md#第-1-周初始化工程骨架,factoid,easy,true
+Q015,第1周前端建议是什么,Next.js App Router + TypeScript,README.md#第-1-周初始化工程骨架,factoid,easy,true
+Q016,第1周基础设施要启动哪些组件,docker-compose启动postgres+pgvector和redis,README.md#第-1-周初始化工程骨架,factoid,easy,true
+Q017,第2周必须优先完成什么,先完成非Agent RAG基线,README.md#第-2-周先完成非-agent-rag-基线必须,process,easy,true
+Q018,第2周需要覆盖哪些能力,文档解析与清洗分块embedding向量检索和重排,README.md#第-2-周先完成非-agent-rag-基线必须,process,medium,true
+Q019,第2周输出要求是什么,回答必须带引用并可追溯,README.md#第-2-周先完成非-agent-rag-基线必须,factoid,easy,true
+Q020,第3到4周推荐使用什么编排框架,LangGraph,README.md#第-34-周升级到-agentic-rag,factoid,easy,true
+Q021,第3到4周建议拆分哪些核心节点,问题分类查询改写检索策略选择回答生成自检重试,README.md#第-34-周升级到-agentic-rag,process,medium,true
+Q022,第3到4周建议增加哪些工具化能力,元数据过滤多路检索dense+keyword和失败回退策略,README.md#第-34-周升级到-agentic-rag,process,medium,true
+Q023,第5周前端体验要做什么,聊天流式输出引用跳转和会话历史,README.md#第-5-周前端体验完善,process,easy,true
+Q024,第5周为什么要加入用户反馈入口,用于后续评估与迭代,README.md#第-5-周前端体验完善,factoid,easy,true
+Q025,第6周离线评测关注哪些指标,准确率召回率和引用准确率,README.md#第-6-周评估与可观测,factoid,easy,true
+Q026,第6周线上要监控什么,链路tracing以及延迟和成本监控,README.md#第-6-周评估与可观测,factoid,easy,true
+Q027,第7周安全建设包含哪些内容,鉴权限流敏感信息脱敏与注入防护,README.md#第-7-周生产化与安全,process,medium,true
+Q028,第7周发布保障包含哪些内容,灰度发布告警回滚与备份策略,README.md#第-7-周生产化与安全,process,medium,true
+Q029,首批任务的第1项是什么,初始化backend frontend infra docs目录,README.md#首批可执行任务建议按顺序,factoid,easy,true
+Q030,首批任务的第2项是什么,后端先做ingest chat chat/stream三个API,README.md#首批可执行任务建议按顺序,factoid,easy,true
+Q031,首批任务的第3项是什么,准备至少50条评测问题并先跑通基线RAG,README.md#首批可执行任务建议按顺序,factoid,easy,true
+Q032,首批任务的第4项是什么,基线达标后再加Agent节点不要反过来,README.md#首批可执行任务建议按顺序,factoid,easy,true
+Q033,FastAPI官方文档地址是什么,https://fastapi.tiangolo.com/,README.md#参考文档官方,link,easy,true
+Q034,LangGraph官方文档地址是什么,https://docs.langchain.com/oss/python/langgraph/overview,README.md#参考文档官方,link,easy,true
+Q035,Next.js官方文档地址是什么,https://nextjs.org/docs,README.md#参考文档官方,link,easy,true
+Q036,OpenAI Embeddings文档地址是什么,https://developers.openai.com/api/docs/guides/embeddings,README.md#参考文档官方,link,easy,true
+Q037,Qdrant文档地址是什么,https://qdrant.tech/documentation/,README.md#参考文档官方,link,easy,true
+Q038,LangSmith Observability文档地址是什么,https://docs.langchain.com/langsmith/observability,README.md#参考文档官方,link,easy,true
+Q039,OpenRAG仓库地址是什么,https://github.com/langflow-ai/openrag,README.md#参考开源项目,link,easy,true
+Q040,FastGPT仓库地址是什么,https://github.com/labring/FastGPT,README.md#参考开源项目,link,easy,true
+Q041,第0周的KPI包含哪四项,回答正确率引用命中率P95延迟单问成本,README.md#第-0-周定义边界与验收标准,factoid,easy,true
+Q042,为什么第2周要先做非Agent基线,因为先建立可验证基线再增加Agent复杂度能降低风险,README.md#第-2-周先完成非-agent-rag-基线必须,process,medium,true
+Q043,第3到4周是否包含自检与重试能力,是并且是推荐的核心节点之一,README.md#第-34-周升级到-agentic-rag,factoid,easy,true
+Q044,第5周是否要求支持引用跳转,是第5周前端体验明确要求包含引用跳转,README.md#第-5-周前端体验完善,factoid,easy,true
+Q045,多路检索在文档里是如何描述的,dense + keyword,README.md#第-34-周升级到-agentic-rag,factoid,easy,true
+Q046,首批初始化目录具体有哪些,backend frontend infra docs,README.md#首批可执行任务建议按顺序,factoid,easy,true
+Q047,第1周基础设施是否包含Redis,是包含redis并与postgres+pgvector一起通过docker-compose启动,README.md#第-1-周初始化工程骨架,factoid,easy,true
+Q048,整个路线总共覆盖多少周,第0周到第7周共8个阶段节点,README.md#推荐实施路线7-周,factoid,easy,true
+Q049,哪一周主攻评估与可观测,第6周,README.md#第-6-周评估与可观测,factoid,easy,true
+Q050,哪一周主攻生产化与安全,第7周,README.md#第-7-周生产化与安全,factoid,easy,true
