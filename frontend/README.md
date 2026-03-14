@@ -5,7 +5,7 @@
 ```bash
 cd frontend
 npm install
-npm run dev
+make dev
 ```
 
 ## Build
@@ -14,3 +14,19 @@ npm run dev
 cd frontend
 npm run build
 ```
+
+## Lint
+
+```bash
+cd frontend
+make lint
+```
+
+## Tests
+
+```bash
+cd frontend
+make test
+```
+
+Note: `make test` currently exits with a reminder because no frontend test script is configured yet.

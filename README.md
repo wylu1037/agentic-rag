@@ -80,5 +80,19 @@
 ## 本地开发（当前可用）
 
 1. 启动基础设施：`docker compose -f infra/docker-compose.yml up -d`
-2. 启动后端：`cd backend && uv sync --extra dev && uv run uvicorn app.main:app --reload`
-3. 启动前端：`cd frontend && npm install && npm run dev`
+2. 安装后端依赖：`cd backend && uv sync --extra dev`
+3. 启动后端：`cd backend && make dev`
+4. 安装前端依赖：`cd frontend && npm install`
+5. 启动前端：`cd frontend && make dev`
+
+## 常用命令（Makefile）
+
+### Backend
+- 开发：`cd backend && make dev`
+- 测试：`cd backend && make test`
+- Lint：`cd backend && make lint`
+
+### Frontend
+- 开发：`cd frontend && make dev`
+- 测试：`cd frontend && make test`（当前会提示未配置测试脚本并退出）
+- Lint：`cd frontend && make lint`

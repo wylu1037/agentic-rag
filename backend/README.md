@@ -5,12 +5,19 @@
 ```bash
 cd backend
 uv sync --extra dev
-uv run uvicorn app.main:app --reload
+make dev
 ```
 
 ## Tests
 
 ```bash
 cd backend
-uv run pytest
+make test
+```
+
+## Lint
+
+```bash
+cd backend
+make lint
 ```
