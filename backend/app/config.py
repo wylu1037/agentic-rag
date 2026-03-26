@@ -6,9 +6,10 @@ class Settings(BaseSettings):
     database_url_sync: str = "postgresql://agentic:agentic@localhost:5432/agentic_rag"
 
     openai_api_key: str = ""
-    openai_embedding_model: str = "text-embedding-3-small"
+    openai_base_url: str | None = None
+    openai_embedding_model: str = "Qwen/Qwen3-Embedding-0.6B"
     openai_chat_model: str = "gpt-4o-mini"
-    embedding_dimension: int = 1536
+    embedding_dimension: int = 1024
 
     chunk_size: int = 512
     chunk_overlap: int = 64

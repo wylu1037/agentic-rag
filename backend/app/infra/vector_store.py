@@ -30,11 +30,10 @@ class PgVectorStore:
     async def search_similar(
         self, query_embedding: list[float], top_k: int = 5
     ) -> list[tuple[Chunk, float]]:
-        embedding_str = "[" + ",".join(str(v) for v in query_embedding) + "]"
         stmt = (
             select(
                 ChunkRow,
-                (1 - ChunkRow.embedding.cosine_distance(embedding_str)).label("score"),
+                (1 - ChunkRow.embedding.cosine_distance(query_embedding)).label("score"),
             )
             .order_by(text("score DESC"))
             .limit(top_k)

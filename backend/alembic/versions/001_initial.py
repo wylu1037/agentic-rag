@@ -1,4 +1,4 @@
-"""Initial tables: documents and chunks with pgvector
+"""Initial tables: documents and chunks with pgvector (embedding dim 1024)
 
 Revision ID: 001
 Revises:
@@ -53,7 +53,7 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.Column("content", sa.Text(), nullable=False),
-        sa.Column("embedding", Vector(1536), nullable=True),
+        sa.Column("embedding", Vector(1024), nullable=True),
         sa.Column("chunk_index", sa.Integer(), nullable=False),
         sa.Column("token_count", sa.Integer(), nullable=False, server_default="0"),
         sa.Column("metadata", sa.dialects.postgresql.JSONB(), nullable=False, server_default="{}"),

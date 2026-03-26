@@ -7,7 +7,10 @@ from app.config import Settings
 
 class OpenAILLM:
     def __init__(self, settings: Settings) -> None:
-        self._client = openai.AsyncOpenAI(api_key=settings.openai_api_key)
+        self._client = openai.AsyncOpenAI(
+            api_key=settings.openai_api_key,
+            base_url=settings.openai_base_url,
+        )
         self._model = settings.openai_chat_model
 
     async def generate(self, messages: list[dict], system_prompt: str = "") -> str:
