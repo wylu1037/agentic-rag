@@ -23,4 +23,9 @@ async def get_session() -> AsyncSession:
     if _session_factory is None:
         raise RuntimeError("Database engine not initialized. Call init_engine() first.")
     async with _session_factory() as session:
-        yield session
+        try:
+            yield session
+            await session.commit()
+        except Exception:
+            await session.rollback()
+            raise
