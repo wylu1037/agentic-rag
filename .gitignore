@@ -19,3 +19,6 @@ dist/
 # Env
 .env
 .env.*
+
+# Docs
+.docs/

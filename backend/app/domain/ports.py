@@ -23,6 +23,12 @@ class Embedder(Protocol):
     async def embed_query(self, query: str) -> list[float]: ...
 
 
+class Reranker(Protocol):
+    async def rerank(
+        self, query: str, candidates: list[tuple[Chunk, float]], top_k: int
+    ) -> list[tuple[Chunk, float]]: ...
+
+
 class LLMClient(Protocol):
     async def generate(self, messages: list[dict], system_prompt: str = "") -> str: ...
     async def generate_stream(

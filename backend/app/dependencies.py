@@ -1,4 +1,5 @@
 from functools import lru_cache
+from typing import Annotated
 
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -10,6 +11,7 @@ from app.infra.document_store import PgDocumentStore
 from app.infra.embedder import OpenAIEmbedder
 from app.infra.llm import OpenAILLM
 from app.infra.parser import MarkdownParser
+from app.infra.reranker import HeuristicReranker, NoopReranker
 from app.infra.vector_store import PgVectorStore
 from app.services.chat import ChatService
 from app.services.ingest import IngestService
@@ -21,35 +23,66 @@ def get_settings() -> Settings:
     return Settings()
 
 
+SettingsDep = Annotated[Settings, Depends(get_settings)]
+
+
+SessionDep = Annotated[AsyncSession, Depends(get_session)]
+
+
+
 def get_parser() -> MarkdownParser:
     return MarkdownParser()
 
 
-def get_chunker(settings: Settings = Depends(get_settings)) -> HeadingAwareChunker:
+ParserDep = Annotated[MarkdownParser, Depends(get_parser)]
+
+
+def get_chunker(settings: SettingsDep) -> HeadingAwareChunker:
     return HeadingAwareChunker(
         chunk_size=settings.chunk_size,
         chunk_overlap=settings.chunk_overlap,
     )
 
 
-def get_embedder(settings: Settings = Depends(get_settings)) -> OpenAIEmbedder:
+ChunkerDep = Annotated[HeadingAwareChunker, Depends(get_chunker)]
+
+
+def get_embedder(settings: SettingsDep) -> OpenAIEmbedder:
     return OpenAIEmbedder(settings)
 
 
-def get_document_store(session: AsyncSession = Depends(get_session)) -> PgDocumentStore:
+EmbedderDep = Annotated[OpenAIEmbedder, Depends(get_embedder)]
+
+
+def get_document_store(session: SessionDep) -> PgDocumentStore:
     return PgDocumentStore(session)
 
 
-def get_vector_store(session: AsyncSession = Depends(get_session)) -> PgVectorStore:
+DocumentStoreDep = Annotated[PgDocumentStore, Depends(get_document_store)]
+
+
+def get_vector_store(session: SessionDep) -> PgVectorStore:
     return PgVectorStore(session)
 
 
+VectorStoreDep = Annotated[PgVectorStore, Depends(get_vector_store)]
+
+
+def get_reranker(settings: SettingsDep) -> NoopReranker | HeuristicReranker:
+    if not settings.enable_reranker:
+        return NoopReranker()
+    return HeuristicReranker()
+
+
+RerankerDep = Annotated[NoopReranker | HeuristicReranker, Depends(get_reranker)]
+
+
 def get_ingest_service(
-    parser: MarkdownParser = Depends(get_parser),
-    chunker: HeadingAwareChunker = Depends(get_chunker),
-    embedder: OpenAIEmbedder = Depends(get_embedder),
-    doc_store: PgDocumentStore = Depends(get_document_store),
-    vector_store: PgVectorStore = Depends(get_vector_store),
+    parser: ParserDep,
+    chunker: ChunkerDep,
+    embedder: EmbedderDep,
+    doc_store: DocumentStoreDep,
+    vector_store: VectorStoreDep,
 ) -> IngestService:
     return IngestService(
         parser=parser,
@@ -60,19 +93,38 @@ def get_ingest_service(
     )
 
 
+IngestServiceDep = Annotated[IngestService, Depends(get_ingest_service)]
+
+
 def get_retrieval_service(
-    embedder: OpenAIEmbedder = Depends(get_embedder),
-    vector_store: PgVectorStore = Depends(get_vector_store),
+    settings: SettingsDep,
+    embedder: EmbedderDep,
+    vector_store: VectorStoreDep,
+    reranker: RerankerDep,
 ) -> RetrievalService:
-    return RetrievalService(embedder=embedder, vector_repo=vector_store)
+    return RetrievalService(
+        embedder=embedder,
+        vector_repo=vector_store,
+        reranker=reranker,
+        reranker_fetch_k=settings.reranker_fetch_k,
+    )
 
 
-def get_llm(settings: Settings = Depends(get_settings)) -> OpenAILLM:
+RetrievalServiceDep = Annotated[RetrievalService, Depends(get_retrieval_service)]
+
+
+def get_llm(settings: SettingsDep) -> OpenAILLM:
     return OpenAILLM(settings)
 
 
+LLMDep = Annotated[OpenAILLM, Depends(get_llm)]
+
+
 def get_chat_service(
-    retrieval: RetrievalService = Depends(get_retrieval_service),
-    llm: OpenAILLM = Depends(get_llm),
+    retrieval: RetrievalServiceDep,
+    llm: LLMDep,
 ) -> ChatService:
     return ChatService(retrieval=retrieval, llm=llm)
+
+
+ChatServiceDep = Annotated[ChatService, Depends(get_chat_service)]

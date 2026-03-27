@@ -1,8 +1,7 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
 from app.api.schemas import IngestRequest, IngestResponse
-from app.dependencies import get_ingest_service
-from app.services.ingest import IngestService
+from app.dependencies import IngestServiceDep
 
 router = APIRouter(prefix="/ingest", tags=["ingest"])
 
@@ -10,8 +9,10 @@ router = APIRouter(prefix="/ingest", tags=["ingest"])
 @router.post("", response_model=IngestResponse)
 async def ingest_document(
     request: IngestRequest,
-    service: IngestService = Depends(get_ingest_service),
+    service: IngestServiceDep,
 ) -> IngestResponse:
+
+
     doc = await service.ingest(
         content=request.content,
         filename=request.filename,

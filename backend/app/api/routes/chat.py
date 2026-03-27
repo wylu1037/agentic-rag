@@ -1,18 +1,20 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from starlette.responses import StreamingResponse
 
 from app.api.schemas import ChatRequest, ChatResponse, CitationOut
-from app.dependencies import get_chat_service
-from app.services.chat import ChatService
+from app.dependencies import ChatServiceDep
 
 router = APIRouter(prefix="/chat", tags=["chat"])
+
 
 
 @router.post("", response_model=ChatResponse)
 async def chat(
     request: ChatRequest,
-    service: ChatService = Depends(get_chat_service),
+    service: ChatServiceDep,
 ) -> ChatResponse:
+
+
     result = await service.chat(query=request.query, top_k=request.top_k)
     return ChatResponse(
         answer=result.answer,
@@ -33,8 +35,10 @@ async def chat(
 @router.post("/stream")
 async def chat_stream(
     request: ChatRequest,
-    service: ChatService = Depends(get_chat_service),
+    service: ChatServiceDep,
 ) -> StreamingResponse:
+
+
     return StreamingResponse(
         service.chat_stream(query=request.query, top_k=request.top_k),
         media_type="text/event-stream",

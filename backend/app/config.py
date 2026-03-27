@@ -15,5 +15,7 @@ class Settings(BaseSettings):
     chunk_overlap: int = 64
 
     default_top_k: int = 5
+    enable_reranker: bool = False
+    reranker_fetch_k: int = 20
 
     model_config = {"env_file": ".env", "env_prefix": "RAG_"}
