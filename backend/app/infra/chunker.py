@@ -4,7 +4,7 @@ from uuid import UUID
 
 import tiktoken
 
-from app.domain.models import Chunk
+from app.domain.models import Chunk, ParsedContent, ParsedSection
 
 
 def _slugify(text: str) -> str:
@@ -23,8 +23,14 @@ class HeadingAwareChunker:
     def _token_count(self, text: str) -> int:
         return len(self._enc.encode(text))
 
-    def chunk(self, text: str, source: str, doc_id: UUID) -> list[Chunk]:
-        sections = self._split_by_headings(text)
+    def chunk(self, content: ParsedContent | str, source: str, doc_id: UUID) -> list[Chunk]:
+        if isinstance(content, str):
+            content = ParsedContent(text=content)
+
+        if content.sections:
+            return self._chunk_sections(content.sections, source, doc_id, content.metadata)
+
+        sections = self._split_by_headings(content.text)
         chunks: list[Chunk] = []
         idx = 0
 
@@ -42,7 +48,45 @@ class HeadingAwareChunker:
                             "heading_path": heading_path,
                             "source_section": section_slug,
                             "source": source,
+                            **content.metadata,
                         },
+                    )
+                )
+                idx += 1
+
+        return chunks
+
+    def _chunk_sections(
+        self,
+        sections: list[ParsedSection],
+        source: str,
+        doc_id: UUID,
+        document_metadata: dict,
+    ) -> list[Chunk]:
+        chunks: list[Chunk] = []
+        idx = 0
+
+        for section in sections:
+            section_text = section.text.strip()
+            if not section_text:
+                continue
+
+            section_metadata = {**document_metadata, **section.metadata}
+            section_metadata["source"] = source
+            section_metadata.setdefault(
+                "source_section",
+                self._derive_source_section(section_metadata),
+            )
+            section_metadata.setdefault("heading_path", "")
+
+            for sub in self._split_section(section_text):
+                chunks.append(
+                    Chunk(
+                        document_id=doc_id,
+                        content=sub,
+                        chunk_index=idx,
+                        token_count=self._token_count(sub),
+                        metadata=dict(section_metadata),
                     )
                 )
                 idx += 1
@@ -94,8 +138,22 @@ class HeadingAwareChunker:
             end = min(start + self._chunk_size, len(tokens))
             chunk_text = self._enc.decode(tokens[start:end])
             chunks.append(chunk_text)
-            start = end - self._chunk_overlap
-            if start >= len(tokens):
+            if end >= len(tokens):
                 break
+            start = max(end - self._chunk_overlap, start + 1)
 
         return chunks
+
+    @staticmethod
+    def _derive_source_section(metadata: dict) -> str:
+        heading_path = metadata.get("heading_path", "")
+        if heading_path:
+            return _slugify(heading_path.split(" > ")[-1])
+
+        page_numbers = metadata.get("page_numbers", [])
+        if page_numbers:
+            if len(page_numbers) == 1:
+                return f"page-{page_numbers[0]}"
+            return f"pages-{page_numbers[0]}-{page_numbers[-1]}"
+
+        return ""

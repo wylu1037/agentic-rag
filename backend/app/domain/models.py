@@ -27,6 +27,20 @@ class Chunk:
 
 
 @dataclass
+class ParsedSection:
+    text: str = ""
+    metadata: dict = field(default_factory=dict)
+
+
+@dataclass
+class ParsedContent:
+    text: str = ""
+    content_type: str = "text"
+    metadata: dict = field(default_factory=dict)
+    sections: list[ParsedSection] = field(default_factory=list)
+
+
+@dataclass
 class Citation:
     chunk_id: UUID = field(default_factory=uuid4)
     document_title: str = ""

@@ -22,9 +22,12 @@ def _build_context(chunks_with_scores: list[tuple[Chunk, float]]) -> str:
     for i, (chunk, score) in enumerate(chunks_with_scores, 1):
         source = chunk.metadata.get("source", "unknown")
         section = chunk.metadata.get("heading_path", "")
+        page_numbers = chunk.metadata.get("page_numbers", [])
         header = f"[片段 {i}] 来源: {source}"
         if section:
             header += f" | 章节: {section}"
+        elif page_numbers:
+            header += f" | 页码: {','.join(str(page) for page in page_numbers)}"
         header += f" | 相关度: {score:.2f}"
         parts.append(f"{header}\n{chunk.content}")
     return "\n\n---\n\n".join(parts)
@@ -36,12 +39,22 @@ def _build_citations(chunks_with_scores: list[tuple[Chunk, float]]) -> list[Cita
             chunk_id=chunk.id,
             document_title=chunk.metadata.get("source", "unknown"),
             source=chunk.metadata.get("source", ""),
-            source_section=chunk.metadata.get("source_section", ""),
+            source_section=chunk.metadata.get("source_section", "")
+            or chunk.metadata.get("heading_path", "")
+            or _format_pages(chunk.metadata.get("page_numbers", [])),
             content_snippet=chunk.content[:200],
             score=score,
         )
         for chunk, score in chunks_with_scores
     ]
+
+
+def _format_pages(page_numbers: list[int]) -> str:
+    if not page_numbers:
+        return ""
+    if len(page_numbers) == 1:
+        return f"page-{page_numbers[0]}"
+    return f"pages-{page_numbers[0]}-{page_numbers[-1]}"
 
 
 class ChatService:

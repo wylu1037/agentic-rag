@@ -24,17 +24,18 @@ class IngestService:
         self._vector_repo = vector_repo
 
     async def ingest(self, content: str | bytes, filename: str, source: str = "") -> Document:
-        text = self._parser.parse(content, filename)
+        parsed = self._parser.parse(content, filename)
 
         doc = Document(
             title=filename,
             source=source or filename,
-            content=text,
-            content_type=self._detect_type(filename),
+            content=parsed.text,
+            content_type=parsed.content_type or self._detect_type(filename),
+            metadata=parsed.metadata,
         )
         doc = await self._doc_repo.save(doc)
 
-        chunks = self._chunker.chunk(text, doc.source, doc.id)
+        chunks = self._chunker.chunk(parsed, doc.source, doc.id)
 
         if chunks:
             texts = [c.content for c in chunks]

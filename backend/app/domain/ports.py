@@ -2,7 +2,7 @@ from collections.abc import AsyncIterator
 from typing import Protocol
 from uuid import UUID
 
-from app.domain.models import Chunk, Document
+from app.domain.models import Chunk, Document, ParsedContent
 
 
 class DocumentRepository(Protocol):
@@ -37,8 +37,8 @@ class LLMClient(Protocol):
 
 
 class DocumentParser(Protocol):
-    def parse(self, content: bytes | str, filename: str) -> str: ...
+    def parse(self, content: bytes | str, filename: str) -> ParsedContent: ...
 
 
 class TextChunker(Protocol):
-    def chunk(self, text: str, source: str, doc_id: UUID) -> list[Chunk]: ...
+    def chunk(self, content: ParsedContent, source: str, doc_id: UUID) -> list[Chunk]: ...
