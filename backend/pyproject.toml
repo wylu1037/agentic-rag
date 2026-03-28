@@ -16,6 +16,8 @@ dependencies = [
     "openai>=1.50.0,<2.0.0",
     "tiktoken>=0.7.0,<1.0.0",
     "sse-starlette>=2.0.0,<3.0.0",
+    "python-multipart>=0.0.9,<1.0.0",
+    "docling>=2.82.0,<3.0.0",
 ]
 
 [project.optional-dependencies]

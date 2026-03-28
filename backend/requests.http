@@ -8,6 +8,21 @@ Content-Type: application/json
   "source": "demo.md"
 }
 
+### Ingest a local file with Docling
+POST http://127.0.0.1:8000/ingest/file
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="source"
+
+golang工程师.pdf
+--boundary
+Content-Disposition: form-data; name="file"; filename="golang工程师.pdf"
+Content-Type: application/pdf
+
+< ./golang工程师.pdf
+--boundary--
+
 ### Chat query
 POST http://127.0.0.1:8000/chat
 Content-Type: application/json

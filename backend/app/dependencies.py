@@ -10,7 +10,7 @@ from app.infra.database import get_session
 from app.infra.document_store import PgDocumentStore
 from app.infra.embedder import OpenAIEmbedder
 from app.infra.llm import OpenAILLM
-from app.infra.parser import MarkdownParser
+from app.infra.parser import DoclingParser
 from app.infra.reranker import HeuristicReranker, NoopReranker
 from app.infra.vector_store import PgVectorStore
 from app.services.chat import ChatService
@@ -30,11 +30,11 @@ SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
 
 
-def get_parser() -> MarkdownParser:
-    return MarkdownParser()
+def get_parser() -> DoclingParser:
+    return DoclingParser()
 
 
-ParserDep = Annotated[MarkdownParser, Depends(get_parser)]
+ParserDep = Annotated[DoclingParser, Depends(get_parser)]
 
 
 def get_chunker(settings: SettingsDep) -> HeadingAwareChunker:

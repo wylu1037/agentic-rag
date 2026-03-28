@@ -50,10 +50,22 @@ class IngestService:
     @staticmethod
     def _detect_type(filename: str) -> str:
         lower = filename.lower()
-        if lower.endswith(".md"):
+        if lower.endswith((".md", ".markdown", ".qmd", ".rmd")):
             return "markdown"
+        if lower.endswith((".html", ".htm")):
+            return "html"
         if lower.endswith(".txt"):
             return "text"
+        if lower.endswith(".csv"):
+            return "csv"
         if lower.endswith(".pdf"):
             return "pdf"
+        if lower.endswith(".docx"):
+            return "docx"
+        if lower.endswith(".pptx"):
+            return "pptx"
+        if lower.endswith(".xlsx"):
+            return "xlsx"
+        if lower.endswith((".png", ".jpg", ".jpeg", ".tiff", ".bmp", ".webp")):
+            return "image"
         return "text"
