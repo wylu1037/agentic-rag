@@ -1,31 +1,134 @@
-:root {
-  color-scheme: light;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Raycast Design System ─────────────────────────────────── */
+
+@layer base {
+  :root {
+    color-scheme: dark;
+
+    /* surfaces */
+    --rc-bg:       #07080a;
+    --rc-surface:  #101111;
+    --rc-elevated: #1b1c1e;
+
+    /* text */
+    --rc-white:  #f9f9f9;
+    --rc-lt:     #cecece;
+    --rc-mid:    #9c9c9d;
+    --rc-dim:    #6a6b6c;
+    --rc-dark:   #434345;
+
+    /* accents */
+    --rc-red:    #FF6363;
+    --rc-blue:   hsl(202, 100%, 67%);
+    --rc-green:  hsl(151, 59%, 59%);
+    --rc-yellow: hsl(43, 100%, 60%);
+
+    /* borders */
+    --rc-border:        rgba(255, 255, 255, 0.06);
+    --rc-border-strong: #2f3031;
+    --rc-border-focus:  hsla(202, 100%, 67%, 0.4);
+
+    /* glows */
+    --rc-glow-blue:  hsla(202, 100%, 67%, 0.15);
+    --rc-glow-red:   hsla(0, 100%, 69%, 0.15);
+    --rc-glow-warm:  rgba(215, 201, 175, 0.05);
+
+    /* shadows */
+    --shadow-card:    rgb(27,28,30) 0px 0px 0px 1px, rgb(7,8,10) 0px 0px 0px 1px inset;
+    --shadow-btn:     rgba(255,255,255,0.05) 0px 1px 0px 0px inset, rgba(255,255,255,0.25) 0px 0px 0px 1px, rgba(0,0,0,0.2) 0px -1px 0px 0px inset;
+    --shadow-floating:rgba(0,0,0,0.5) 0px 0px 0px 2px, rgba(255,255,255,0.19) 0px 0px 14px;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--rc-bg);
+    color: var(--rc-white);
+    font-family: var(--font-inter), "Inter Fallback", system-ui, sans-serif;
+    font-feature-settings: "calt", "kern", "liga", "ss03";
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    line-height: 1.6;
+    overflow: hidden;
+  }
+
+  /* ── Scrollbar ───────────── */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.16); }
+
+  /* ── Selection ──────────── */
+  ::selection {
+    background: var(--rc-glow-blue);
+    color: var(--rc-white);
+  }
 }
 
-* {
-  box-sizing: border-box;
-}
+/* ── Utilities ─────────────────────────────────────────────── */
 
-body {
-  margin: 0;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background: #f5f7fb;
-  color: #0f172a;
-}
+@layer utilities {
+  .rc-card {
+    background: var(--rc-surface);
+    border-radius: 12px;
+    box-shadow: var(--shadow-card);
+  }
 
-.container {
-  max-width: 880px;
-  margin: 64px auto;
-  padding: 0 24px;
-}
+  .rc-input {
+    background: var(--rc-bg);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    color: var(--rc-white);
+    font-family: inherit;
+    font-feature-settings: "calt", "kern", "liga", "ss03";
+    letter-spacing: 0.2px;
+    font-weight: 500;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  .rc-input::placeholder { color: var(--rc-dim); }
+  .rc-input:focus {
+    border-color: var(--rc-border-focus);
+    box-shadow: 0 0 0 3px var(--rc-glow-blue);
+  }
 
-h1 {
-  margin: 0 0 12px;
-  font-size: 40px;
-  line-height: 1.1;
-}
+  .rc-btn-primary {
+    background: transparent;
+    color: var(--rc-white);
+    border: none;
+    border-radius: 86px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    box-shadow: var(--shadow-pill);
+    transition: opacity 0.2s;
+    cursor: pointer;
+  }
+  .rc-btn-primary:hover { opacity: 0.7; }
+  .rc-btn-primary:active { transform: scale(0.98); }
 
-p {
-  margin: 0 0 8px;
-  line-height: 1.6;
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(255,255,255,0.03) 0%,
+      rgba(255,255,255,0.08) 50%,
+      rgba(255,255,255,0.03) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s linear infinite;
+  }
 }
