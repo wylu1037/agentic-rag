@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "documentation": {
+      "source": "kubb-labs/kubb",
+      "sourceType": "github",
+      "computedHash": "f97b8d009e12b69e46c09fe9e2c901cb84186b34990b9cdec9a44f9174ccf026"
+    }
+  }
+}
