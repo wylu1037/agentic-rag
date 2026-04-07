@@ -8,7 +8,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import { cn } from "@/lib/utils";
-import { chat } from "@/lib/api";
+import { chatStream } from "@/lib/api";
 import { MessageBubble, type Message } from "./message-bubble";
 import {
   PaperPlaneTilt,
@@ -135,7 +135,9 @@ export function ChatInterface() {
     el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
   }, [input]);
 
-  const sendMessage = useCallback(async () => {
+  const abortRef = useRef<AbortController | null>(null);
+
+  const sendMessage = useCallback(() => {
     const query = input.trim();
     if (!query || loading) return;
 
@@ -145,43 +147,55 @@ export function ChatInterface() {
       content: query,
     };
     const assistantId = `a-${Date.now()}`;
-    const loadingMsg: Message = {
+    const streamingMsg: Message = {
       id: assistantId,
       role: "assistant",
       content: "",
       isLoading: true,
     };
 
-    setMessages((prev) => [...prev, userMsg, loadingMsg]);
+    setMessages((prev) => [...prev, userMsg, streamingMsg]);
     setInput("");
     setLoading(true);
 
-    try {
-      const res = await chat(query, topK);
-      setMessages((prev) =>
-        prev.map((m) =>
-          m.id === assistantId
-            ? {
-                ...m,
-                content: res.answer,
-                citations: res.citations,
-                isLoading: false,
-              }
-            : m,
-        ),
-      );
-    } catch (e: unknown) {
-      const errMsg = e instanceof Error ? e.message : "请求失败，请稍后重试";
-      setMessages((prev) =>
-        prev.map((m) =>
-          m.id === assistantId
-            ? { ...m, content: "", isLoading: false, error: errMsg }
-            : m,
-        ),
-      );
-    } finally {
-      setLoading(false);
-    }
+    const controller = chatStream(query, topK, {
+      onToken(token) {
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === assistantId ? { ...m, content: m.content + token } : m,
+          ),
+        );
+      },
+      onCitations(citations) {
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === assistantId ? { ...m, citations } : m,
+          ),
+        );
+      },
+      onDone() {
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === assistantId ? { ...m, isLoading: false } : m,
+          ),
+        );
+        setLoading(false);
+        abortRef.current = null;
+      },
+      onError(error) {
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === assistantId
+              ? { ...m, content: "", isLoading: false, error }
+              : m,
+          ),
+        );
+        setLoading(false);
+        abortRef.current = null;
+      },
+    });
+
+    abortRef.current = controller;
   }, [input, loading, topK]);
 
   function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {

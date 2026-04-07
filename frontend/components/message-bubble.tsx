@@ -126,15 +126,15 @@ export function MessageBubble({ message }: MessageBubbleProps) {
           </div>
         )}
 
-        {/* Loading state */}
-        {message.isLoading && !message.error && (
+        {/* Loading state — no content yet */}
+        {message.isLoading && !message.content && !message.error && (
           <div className="pt-1">
             <ThinkingDots />
           </div>
         )}
 
-        {/* Answer text */}
-        {!message.isLoading && !message.error && (
+        {/* Streaming / completed content */}
+        {message.content && !message.error && (
           <>
             <div
               className={cn(
@@ -142,6 +142,12 @@ export function MessageBubble({ message }: MessageBubbleProps) {
               )}
             >
               {message.content}
+              {message.isLoading && (
+                <span
+                  className="ml-0.5 inline-block h-[1.1em] w-[2px] translate-y-[2px] bg-rc-mid"
+                  style={{ animation: "pulse-dot 1s ease-in-out infinite" }}
+                />
+              )}
             </div>
 
             {message.citations && <Citations citations={message.citations} />}
