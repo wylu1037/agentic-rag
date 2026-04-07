@@ -1,34 +1,23 @@
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
+import axios from "axios";
+import {
+  chatChatPost,
+  healthHealthGet,
+  ingestDocumentIngestPost,
+  ingestFileIngestFilePost,
+} from "../gen/index";
+import type { CitationOut, IngestResponse, ChatResponse } from "../gen/index";
 
-/* ── Types ─────────────────────────────────────────────────── */
+export type { CitationOut, IngestResponse, ChatResponse };
 
-export interface IngestResponse {
-  document_id: string;
-  title: string;
-  chunk_count: number;
-}
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
 
-export interface CitationOut {
-  document_title: string;
-  source: string;
-  source_section: string;
-  content_snippet: string;
-  score: number;
-}
-
-export interface ChatResponse {
-  answer: string;
-  citations: CitationOut[];
-  conversation_id: string;
-}
-
-/* ── API calls ─────────────────────────────────────────────── */
+// Configure default axios instance
+axios.defaults.baseURL = BASE_URL;
 
 export async function healthCheck(): Promise<boolean> {
   try {
-    const res = await fetch(`${BASE_URL}/health`, { cache: "no-store" });
-    return res.ok;
+    const res = await healthHealthGet({ baseURL: BASE_URL } as any); // config might only be partial
+    return res.status === "ok";
   } catch {
     return false;
   }
@@ -39,49 +28,32 @@ export async function ingestText(
   filename: string,
   source?: string,
 ): Promise<IngestResponse> {
-  const res = await fetch(`${BASE_URL}/ingest`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ content, filename, source: source || filename }),
-  });
-  if (!res.ok) {
-    const detail = await res.text().catch(() => res.statusText);
-    throw new Error(detail || `HTTP ${res.status}`);
-  }
-  return res.json();
+  return await ingestDocumentIngestPost(
+    {
+      content,
+      filename,
+      source: source || filename,
+    },
+    { baseURL: BASE_URL }
+  );
 }
 
 export async function ingestFile(
   file: File,
   source?: string,
 ): Promise<IngestResponse> {
-  const form = new FormData();
-  form.append("file", file);
-  if (source) form.append("source", source);
-
-  const res = await fetch(`${BASE_URL}/ingest/file`, {
-    method: "POST",
-    body: form,
-  });
-  if (!res.ok) {
-    const detail = await res.text().catch(() => res.statusText);
-    throw new Error(detail || `HTTP ${res.status}`);
-  }
-  return res.json();
+  return await ingestFileIngestFilePost(
+    {
+      file,
+      source: source,
+    },
+    { baseURL: BASE_URL }
+  );
 }
 
 export async function chat(
   query: string,
   top_k = 5,
 ): Promise<ChatResponse> {
-  const res = await fetch(`${BASE_URL}/chat`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query, top_k }),
-  });
-  if (!res.ok) {
-    const detail = await res.text().catch(() => res.statusText);
-    throw new Error(detail || `HTTP ${res.status}`);
-  }
-  return res.json();
+  return await chatChatPost({ query, top_k }, { baseURL: BASE_URL });
 }
