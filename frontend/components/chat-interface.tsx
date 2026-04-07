@@ -21,45 +21,45 @@ import {
 /* ── Empty state ─────────────────────────────────────────────── */
 function EmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center h-full gap-6 px-8 select-none">
+    <div className="flex h-full select-none flex-col items-center justify-center gap-6 px-8">
       {/* Glow orb */}
       <div
-        className="relative w-16 h-16 rounded-full flex items-center justify-center"
+        className="relative flex h-16 w-16 items-center justify-center rounded-full"
         style={{
-          background: "radial-gradient(circle at 40% 35%, #FF636322 0%, #07080a 70%)",
-          boxShadow: "rgb(27,28,30) 0px 0px 0px 1px, rgb(7,8,10) 0px 0px 0px 1px inset",
+          background:
+            "radial-gradient(circle at 40% 35%, #FF636322 0%, #07080a 70%)",
+          boxShadow:
+            "rgb(27,28,30) 0px 0px 0px 1px, rgb(7,8,10) 0px 0px 0px 1px inset",
         }}
       >
         <Sparkle size={24} weight="duotone" className="text-[#FF6363]" />
       </div>
 
       <div className="text-center">
-        <h2 className="text-xl font-semibold text-rc-white tracking-tight mb-1">
+        <h2 className="mb-1 text-xl font-semibold tracking-tight text-rc-white">
           Agentic RAG
         </h2>
-        <p className="text-sm text-rc-mid max-w-[28ch] leading-relaxed">
+        <p className="max-w-[28ch] text-sm leading-relaxed text-rc-mid">
           先在左侧上传文档，再向知识库提问
         </p>
       </div>
 
       {/* Hint chips */}
       <div className="flex flex-wrap justify-center gap-2">
-        {[
-          "RAG 是什么？",
-          "总结这份文档的核心内容",
-          "列出主要章节",
-        ].map((hint) => (
-          <span
-            key={hint}
-            className={cn(
-              "px-3 py-1.5 rounded-pill text-xs text-rc-mid",
-              "border border-white/[0.06] bg-white/[0.02]",
-              "cursor-default",
-            )}
-          >
-            {hint}
-          </span>
-        ))}
+        {["RAG 是什么？", "总结这份文档的核心内容", "列出主要章节"].map(
+          (hint) => (
+            <span
+              key={hint}
+              className={cn(
+                "rounded-pill px-3 py-1.5 text-xs text-rc-mid",
+                "border border-white/[0.06] bg-white/[0.02]",
+                "cursor-default",
+              )}
+            >
+              {hint}
+            </span>
+          ),
+        )}
       </div>
     </div>
   );
@@ -77,11 +77,11 @@ function SettingsPopover({
 }) {
   return (
     <div
-      className="absolute bottom-full right-0 mb-2 w-56 rounded-card p-4 z-50"
+      className="absolute bottom-full right-0 z-50 mb-2 w-56 rounded-card p-4"
       style={{ boxShadow: "var(--shadow-floating)", background: "#1b1c1e" }}
     >
-      <div className="flex items-center justify-between mb-3">
-        <p className="text-xs font-semibold text-rc-mid uppercase tracking-widest">
+      <div className="mb-3 flex items-center justify-between">
+        <p className="text-xs font-semibold uppercase tracking-widest text-rc-mid">
           检索参数
         </p>
         <button onClick={onClose} className="text-rc-dark hover:text-rc-mid">
@@ -90,9 +90,9 @@ function SettingsPopover({
       </div>
 
       <div>
-        <div className="flex items-center justify-between mb-1">
+        <div className="mb-1 flex items-center justify-between">
           <label className="text-xs text-rc-mid">Top-K 召回数</label>
-          <span className="text-xs font-mono text-rc-white">{topK}</span>
+          <span className="font-mono text-xs text-rc-white">{topK}</span>
         </div>
         <input
           type="range"
@@ -102,7 +102,7 @@ function SettingsPopover({
           onChange={(e) => setTopK(Number(e.target.value))}
           className="w-full accent-[#FF6363]"
         />
-        <div className="flex justify-between text-[10px] text-rc-dark mt-0.5">
+        <div className="mt-0.5 flex justify-between text-[10px] text-rc-dark">
           <span>1</span>
           <span>20</span>
         </div>
@@ -196,20 +196,20 @@ export function ChatInterface() {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex h-full flex-col">
       {/* ── Top bar ──────────────────────────────────────── */}
       <div
         className={cn(
-          "shrink-0 flex items-center justify-between px-5 py-3",
+          "flex shrink-0 items-center justify-between px-5 py-3",
           "border-b border-white/[0.06]",
         )}
       >
         <div className="flex items-center gap-2">
           <div
-            className="w-1.5 h-1.5 rounded-full"
+            className="h-1.5 w-1.5 rounded-full"
             style={{ background: "#5fc992", boxShadow: "0 0 6px #5fc99266" }}
           />
-          <span className="text-xs text-rc-mid tracking-rc-wide">
+          <span className="text-xs tracking-rc-wide text-rc-mid">
             与知识库对话
           </span>
         </div>
@@ -218,7 +218,7 @@ export function ChatInterface() {
           {messages.length > 0 && (
             <button
               onClick={clearChat}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-btn text-xs text-rc-dark hover:text-rc-mid transition-colors border border-transparent hover:border-white/[0.06]"
+              className="flex items-center gap-1.5 rounded-btn border border-transparent px-2.5 py-1 text-xs text-rc-dark transition-colors hover:border-white/[0.06] hover:text-rc-mid"
             >
               <ArrowsCounterClockwise size={12} />
               清空
@@ -232,7 +232,7 @@ export function ChatInterface() {
         {messages.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className="flex flex-col gap-5 max-w-3xl mx-auto">
+          <div className="mx-auto flex max-w-3xl flex-col gap-5">
             {messages.map((m) => (
               <MessageBubble key={m.id} message={m} />
             ))}
@@ -244,12 +244,12 @@ export function ChatInterface() {
       {/* ── Backend error notice ──────────────────────────── */}
       {/* ── Input area ───────────────────────────────────── */}
       <div className="shrink-0 px-5 pb-5 pt-3">
-        <div className="max-w-3xl mx-auto">
+        <div className="mx-auto max-w-3xl">
           <div
             className={cn(
               "relative flex items-end gap-2 rounded-card p-1 pl-3",
               "border border-white/[0.08] bg-rc-surface",
-              "focus-within:border-white/[0.16] transition-colors duration-200",
+              "transition-colors duration-200 focus-within:border-white/[0.16]",
               "shadow-card",
             )}
           >
@@ -263,7 +263,7 @@ export function ChatInterface() {
               disabled={loading}
               className={cn(
                 "flex-1 resize-none bg-transparent py-2 text-sm text-rc-white",
-                "placeholder:text-rc-dim outline-none",
+                "outline-none placeholder:text-rc-dim",
                 "font-sans font-medium leading-relaxed",
                 "disabled:opacity-50",
               )}
@@ -276,9 +276,9 @@ export function ChatInterface() {
                 <button
                   onClick={() => setShowSettings((v) => !v)}
                   className={cn(
-                    "p-1.5 rounded-btn transition-all duration-150",
+                    "rounded-btn p-1.5 transition-all duration-150",
                     showSettings
-                      ? "text-[#55b3ff] bg-[rgba(85,179,255,0.1)]"
+                      ? "bg-[rgba(85,179,255,0.1)] text-[#55b3ff]"
                       : "text-rc-dark hover:text-rc-mid",
                   )}
                   title="检索设置"
@@ -299,16 +299,16 @@ export function ChatInterface() {
                 onClick={sendMessage}
                 disabled={!input.trim() || loading}
                 className={cn(
-                  "flex items-center justify-center w-8 h-8 rounded-btn",
+                  "flex h-8 w-8 items-center justify-center rounded-btn",
                   "transition-all duration-150",
                   input.trim() && !loading
                     ? "bg-[#FF6363] text-white hover:opacity-80 active:scale-95"
-                    : "bg-white/[0.04] text-rc-dark cursor-not-allowed",
+                    : "cursor-not-allowed bg-white/[0.04] text-rc-dark",
                 )}
               >
                 {loading ? (
                   <span
-                    className="w-3 h-3 rounded-full border-2 border-white/20 border-t-white/60 animate-spin"
+                    className="h-3 w-3 animate-spin rounded-full border-2 border-white/20 border-t-white/60"
                     style={{ animation: "spin 0.7s linear infinite" }}
                   />
                 ) : (
@@ -319,7 +319,7 @@ export function ChatInterface() {
           </div>
 
           {/* Keyboard hint */}
-          <div className="flex items-center gap-1.5 mt-2 px-1">
+          <div className="mt-2 flex items-center gap-1.5 px-1">
             <ShieldWarning size={11} className="text-rc-dark" />
             <span className="text-[10px] text-rc-dark">
               仅根据已摄入文档回答 · Top-K={topK}

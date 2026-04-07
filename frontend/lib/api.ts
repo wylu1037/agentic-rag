@@ -34,7 +34,7 @@ export async function ingestText(
       filename,
       source: source || filename,
     },
-    { baseURL: BASE_URL }
+    { baseURL: BASE_URL },
   );
 }
 
@@ -47,13 +47,10 @@ export async function ingestFile(
       file,
       source: source,
     },
-    { baseURL: BASE_URL }
+    { baseURL: BASE_URL },
   );
 }
 
-export async function chat(
-  query: string,
-  top_k = 5,
-): Promise<ChatResponse> {
+export async function chat(query: string, top_k = 5): Promise<ChatResponse> {
   return await chatChatPost({ query, top_k }, { baseURL: BASE_URL });
 }

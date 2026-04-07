@@ -12,7 +12,7 @@ export function formatScore(score: number): string {
 export function scoreColor(score: number): string {
   if (score >= 0.8) return "#5fc992"; // green
   if (score >= 0.6) return "#ffbc33"; // yellow
-  return "#FF6363";                    // red
+  return "#FF6363"; // red
 }
 
 export function truncate(str: string, max: number): string {

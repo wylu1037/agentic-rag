@@ -26,7 +26,7 @@ function ThinkingDots() {
       {[0, 1, 2].map((i) => (
         <span
           key={i}
-          className="w-1.5 h-1.5 rounded-full bg-rc-mid"
+          className="h-1.5 w-1.5 rounded-full bg-rc-mid"
           style={{
             animation: "pulse-dot 1.4s ease-in-out infinite",
             animationDelay: `${i * 0.16}s`,
@@ -48,7 +48,7 @@ function Citations({ citations }: { citations: CitationOut[] }) {
       <button
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "flex items-center gap-1.5 text-[11px] font-semibold tracking-rc-wide uppercase",
+          "flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-rc-wide",
           "transition-colors duration-150",
           open ? "text-rc-mid" : "text-rc-dark hover:text-rc-mid",
         )}
@@ -82,12 +82,12 @@ export function MessageBubble({ message }: MessageBubbleProps) {
 
   if (isUser) {
     return (
-      <div className="flex justify-end animate-fade-up">
+      <div className="flex animate-fade-up justify-end">
         <div
           className={cn(
-            "max-w-[78%] px-4 py-2.5 rounded-card rounded-br-btn",
-            "bg-white/[0.06] border border-white/[0.08]",
-            "text-[15px] text-rc-white leading-relaxed",
+            "max-w-[78%] rounded-card rounded-br-btn px-4 py-2.5",
+            "border border-white/[0.08] bg-white/[0.06]",
+            "text-[15px] leading-relaxed text-rc-white",
             "whitespace-pre-wrap break-words",
           )}
         >
@@ -99,23 +99,23 @@ export function MessageBubble({ message }: MessageBubbleProps) {
 
   /* Assistant */
   return (
-    <div className="flex gap-3 animate-fade-up">
+    <div className="flex animate-fade-up gap-3">
       {/* Avatar */}
       <div
         className={cn(
-          "shrink-0 mt-0.5 w-7 h-7 rounded-btn flex items-center justify-center",
-          "bg-rc-elevated border border-white/[0.08]",
+          "mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-btn",
+          "border border-white/[0.08] bg-rc-elevated",
           message.isLoading && "shimmer",
         )}
       >
         <Robot size={14} weight="fill" className="text-[#FF6363]" />
       </div>
 
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         {/* Error state */}
         {message.error && (
           <div
-            className="px-3 py-2 rounded-btn text-sm"
+            className="rounded-btn px-3 py-2 text-sm"
             style={{
               background: "rgba(255,99,99,0.08)",
               border: "1px solid rgba(255,99,99,0.2)",
@@ -138,15 +138,13 @@ export function MessageBubble({ message }: MessageBubbleProps) {
           <>
             <div
               className={cn(
-                "text-[15px] text-rc-lt leading-relaxed whitespace-pre-wrap break-words",
+                "whitespace-pre-wrap break-words text-[15px] leading-relaxed text-rc-lt",
               )}
             >
               {message.content}
             </div>
 
-            {message.citations && (
-              <Citations citations={message.citations} />
-            )}
+            {message.citations && <Citations citations={message.citations} />}
           </>
         )}
       </div>

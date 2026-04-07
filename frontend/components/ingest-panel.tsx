@@ -37,7 +37,7 @@ function Tab({
     <button
       onClick={onClick}
       className={cn(
-        "flex-1 py-1.5 text-xs font-semibold tracking-rc-wide rounded-btn transition-all duration-150",
+        "flex-1 rounded-btn py-1.5 text-xs font-semibold tracking-rc-wide transition-all duration-150",
         active
           ? "bg-white/[0.08] text-rc-white"
           : "text-rc-dim hover:text-rc-mid",
@@ -52,21 +52,21 @@ function DocRow({ doc, onRemove }: { doc: IngestedDoc; onRemove: () => void }) {
   return (
     <div
       className={cn(
-        "flex items-center gap-2 px-2 py-2 rounded-btn",
-        "hover:bg-white/[0.04] transition-colors group animate-fade-up",
+        "flex items-center gap-2 rounded-btn px-2 py-2",
+        "group animate-fade-up transition-colors hover:bg-white/[0.04]",
       )}
     >
       <FileText size={13} className="shrink-0 text-rc-dim" />
-      <span className="flex-1 text-xs text-rc-lt truncate">{doc.title}</span>
+      <span className="flex-1 truncate text-xs text-rc-lt">{doc.title}</span>
       <span
-        className="shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded"
+        className="shrink-0 rounded px-1.5 py-0.5 font-mono text-[10px]"
         style={{ background: "rgba(85,179,255,0.12)", color: "#55b3ff" }}
       >
         {doc.chunk_count}块
       </span>
       <button
         onClick={onRemove}
-        className="shrink-0 opacity-0 group-hover:opacity-100 text-rc-dark hover:text-rc-mid transition-all"
+        className="shrink-0 text-rc-dark opacity-0 transition-all hover:text-rc-mid group-hover:opacity-100"
       >
         <X size={12} />
       </button>
@@ -93,13 +93,10 @@ export function IngestPanel() {
   const [textContent, setTextContent] = useState("");
 
   /* helpers */
-  const flashStatus = useCallback(
-    (type: "success" | "error", msg: string) => {
-      setStatus({ type, msg });
-      setTimeout(() => setStatus(null), 4000);
-    },
-    [],
-  );
+  const flashStatus = useCallback((type: "success" | "error", msg: string) => {
+    setStatus({ type, msg });
+    setTimeout(() => setStatus(null), 4000);
+  }, []);
 
   const onIngested = useCallback(
     (res: IngestResponse) => {
@@ -153,17 +150,17 @@ export function IngestPanel() {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex h-full flex-col">
       {/* Section label */}
-      <div className="px-4 pt-4 pb-2">
-        <p className="text-[10px] uppercase tracking-widest text-rc-dark font-semibold">
+      <div className="px-4 pb-2 pt-4">
+        <p className="text-[10px] font-semibold uppercase tracking-widest text-rc-dark">
           知识库
         </p>
       </div>
 
       {/* Tabs */}
       <div className="px-4 pb-3">
-        <div className="flex gap-1 p-1 rounded-btn bg-white/[0.03] border border-white/[0.06]">
+        <div className="flex gap-1 rounded-btn border border-white/[0.06] bg-white/[0.03] p-1">
           <Tab active={tab === "file"} onClick={() => setTab("file")}>
             <span className="flex items-center justify-center gap-1">
               <UploadSimple size={11} />
@@ -180,7 +177,7 @@ export function IngestPanel() {
       </div>
 
       {/* Panel body */}
-      <div className="px-4 flex-shrink-0">
+      <div className="flex-shrink-0 px-4">
         {tab === "file" ? (
           /* ── File drop zone ─────────────────────────── */
           <div
@@ -197,12 +194,12 @@ export function IngestPanel() {
             }}
             className={cn(
               "relative flex flex-col items-center justify-center gap-2",
-              "rounded-card border-2 border-dashed cursor-pointer",
-              "py-6 px-4 text-center transition-all duration-200",
+              "cursor-pointer rounded-card border-2 border-dashed",
+              "px-4 py-6 text-center transition-all duration-200",
               dragOver
                 ? "border-[#55b3ff] bg-[rgba(85,179,255,0.06)]"
                 : "border-white/[0.08] hover:border-white/[0.14] hover:bg-white/[0.02]",
-              loading && "opacity-50 pointer-events-none",
+              loading && "pointer-events-none opacity-50",
             )}
           >
             <CloudArrowUp
@@ -250,21 +247,19 @@ export function IngestPanel() {
               placeholder="粘贴 Markdown 或纯文本内容..."
               rows={5}
               className={cn(
-                "rc-input w-full px-3 py-2 text-sm resize-none font-mono",
+                "rc-input w-full resize-none px-3 py-2 font-mono text-sm",
                 "disabled:opacity-50",
               )}
               disabled={loading}
             />
             <button
               onClick={handleTextIngest}
-              disabled={
-                loading || !textFilename.trim() || !textContent.trim()
-              }
+              disabled={loading || !textFilename.trim() || !textContent.trim()}
               className={cn(
-                "w-full py-2 text-sm font-semibold rounded-btn transition-all duration-150",
-                "bg-[#FF6363] text-white tracking-rc-btn",
+                "w-full rounded-btn py-2 text-sm font-semibold transition-all duration-150",
+                "bg-[#FF6363] tracking-rc-btn text-white",
                 "hover:opacity-80 active:scale-[0.98]",
-                "disabled:opacity-30 disabled:cursor-not-allowed",
+                "disabled:cursor-not-allowed disabled:opacity-30",
                 loading && "shimmer",
               )}
             >
@@ -277,11 +272,11 @@ export function IngestPanel() {
         {status && (
           <div
             className={cn(
-              "mt-2 flex items-center gap-2 px-3 py-2 rounded-btn text-xs",
+              "mt-2 flex items-center gap-2 rounded-btn px-3 py-2 text-xs",
               "animate-fade-up",
               status.type === "success"
-                ? "bg-[rgba(95,201,146,0.1)] text-[#5fc992] border border-[rgba(95,201,146,0.2)]"
-                : "bg-[rgba(255,99,99,0.1)] text-[#FF6363] border border-[rgba(255,99,99,0.2)]",
+                ? "border border-[rgba(95,201,146,0.2)] bg-[rgba(95,201,146,0.1)] text-[#5fc992]"
+                : "border border-[rgba(255,99,99,0.2)] bg-[rgba(255,99,99,0.1)] text-[#FF6363]",
             )}
           >
             {status.type === "success" ? (
@@ -295,12 +290,12 @@ export function IngestPanel() {
       </div>
 
       {/* Divider */}
-      <div className="mx-4 mt-4 mb-2 h-px bg-white/[0.06]" />
+      <div className="mx-4 mb-2 mt-4 h-px bg-white/[0.06]" />
 
       {/* Documents list */}
       <div className="flex-1 overflow-y-auto px-2 pb-4">
         {docs.length === 0 ? (
-          <div className="px-2 py-6 flex flex-col items-center gap-2 text-center">
+          <div className="flex flex-col items-center gap-2 px-2 py-6 text-center">
             <FileText size={22} className="text-rc-dark" />
             <p className="text-xs text-rc-dark">还没有摄入文档</p>
             <p className="text-[10px] text-rc-dark opacity-60">
@@ -309,7 +304,7 @@ export function IngestPanel() {
           </div>
         ) : (
           <div className="flex flex-col gap-0.5">
-            <p className="px-2 text-[10px] text-rc-dark uppercase tracking-widest mb-1">
+            <p className="mb-1 px-2 text-[10px] uppercase tracking-widest text-rc-dark">
               已摄入 ({docs.length})
             </p>
             {docs.map((doc) => (

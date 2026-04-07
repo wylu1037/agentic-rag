@@ -6,7 +6,7 @@ export default function HomePage() {
     <div className="flex h-dvh overflow-hidden bg-rc-bg">
       {/* ── Sidebar ──────────────────────────────────────────── */}
       <aside
-        className="w-[288px] shrink-0 flex flex-col overflow-hidden"
+        className="flex w-[288px] shrink-0 flex-col overflow-hidden"
         style={{
           borderRight: "1px solid rgba(255,255,255,0.06)",
           background: "#0b0c0e",
@@ -14,15 +14,14 @@ export default function HomePage() {
       >
         {/* Logo / header */}
         <div
-          className="shrink-0 flex items-center gap-2.5 px-4 py-3.5"
+          className="flex shrink-0 items-center gap-2.5 px-4 py-3.5"
           style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
         >
           {/* Brand mark */}
           <div
-            className="w-6 h-6 rounded-btn flex items-center justify-center shrink-0"
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-btn"
             style={{
-              background:
-                "linear-gradient(135deg, #FF6363 0%, #cc4a4a 100%)",
+              background: "linear-gradient(135deg, #FF6363 0%, #cc4a4a 100%)",
               boxShadow:
                 "rgba(255,99,99,0.4) 0px 2px 8px, rgba(255,255,255,0.1) 0px 1px 0px 0px inset",
             }}
@@ -51,10 +50,10 @@ export default function HomePage() {
           </div>
 
           <div>
-            <p className="text-[13px] font-semibold text-rc-white tracking-tight leading-none">
+            <p className="text-[13px] font-semibold leading-none tracking-tight text-rc-white">
               Agentic RAG
             </p>
-            <p className="text-[10px] text-rc-dark mt-0.5 tracking-rc-wide">
+            <p className="mt-0.5 text-[10px] tracking-rc-wide text-rc-dark">
               Knowledge Base
             </p>
           </div>
@@ -67,7 +66,7 @@ export default function HomePage() {
       </aside>
 
       {/* ── Main chat area ────────────────────────────────────── */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex flex-1 flex-col overflow-hidden">
         <ChatInterface />
       </main>
     </div>
